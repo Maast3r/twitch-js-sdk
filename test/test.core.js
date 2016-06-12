@@ -122,4 +122,52 @@ describe('Core', function() {
     });
 
   });
+
+    describe('#stream()', function() {
+        var streamID = 'lirik';
+        var width = '800';
+        var height = '600';
+        var actual;
+
+        afterEach(function() {
+            if(!actual) {
+                var expectedSrc = "http://player.twitch.tv/?channel=" + streamID;
+                expectedSrc.should.eq(actual.src);
+            }
+        });
+
+        it('it returns a valid iframe', function() {
+            var expectedTagName = "IFRAME";
+            actual = Twitch.stream(streamID);
+            should.exist(actual);
+            expectedTagName.should.eq(actual.tagName);
+        });
+
+        it('should not work without a stream id', function() {
+            (function() {
+              Twitch.stream();
+            }).should['throw']('You need to supply a StreamID');
+        });
+
+        it('default size is 800x600', function() {
+            actual = Twitch.stream(streamID);
+            width.should.eq(actual.width);
+            height.should.eq(actual.height);
+        });
+
+        it('works for given width', function() {
+            var expectedWidth = '1000';
+            actual = Twitch.stream(streamID, expectedWidth);
+            expectedWidth.should.eq(actual.width);
+            height.should.eq(actual.height);
+        });
+
+        it('works for all parameters', function() {
+            var expectedWidth = '1000';
+            var expectedHeight = '1000';
+            actual = Twitch.stream(streamID, expectedWidth, expectedHeight);
+            expectedWidth.should.eq(actual.width);
+            expectedHeight.should.eq(actual.height);
+        });
+    });
 });
